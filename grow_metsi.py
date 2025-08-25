@@ -1,7 +1,7 @@
 
 from lukefi.metsi.data.model import ForestStand
 from functools import cached_property
-from lukefi.metsi.forestry.naturalprocess.metsi_grow.chain import Predict, predict, Species, LandUseCategoryVMI, SiteTypeVMI, \
+from .metsi_grow.chain import Predict, predict, Species, LandUseCategoryVMI, SiteTypeVMI, \
     SoilCategoryVMI, TaxClass, TaxClassReduction, Origin, Storie
 import lukefi.metsi.domain.natural_processes.grow_metsi as domain_gm
 
