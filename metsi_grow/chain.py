@@ -532,14 +532,14 @@ class Predict(_InitMixin):
 
     #-- coordinates --------------------
 
-    X: float = root("X")
+    get_x: float = root("get_x")
     """ETRS-TM35FIN east coordinate (``km``). """
 
-    Y: float = root("Y")
+    get_y: float = root("get_y")
     """ETRS-TM35FIN north coordinate (``km``)."""
 
     def _ykj(self):
-        Y_ykj, X_ykj = etrs_tm35_to_ykj(Y=self.Y, X=self.X)
+        Y_ykj, X_ykj = etrs_tm35_to_ykj(Y=self.get_y, X=self.get_x)
         self.__dict__.update(Y_ykj=Y_ykj, X_ykj=X_ykj)
 
     X_ykj: float = result_property(_ykj)
@@ -551,8 +551,13 @@ class Predict(_InitMixin):
     @cached_property
     def Z(self) -> float:
         """Height above sea level (``m``)."""
-        return xkor(Y_ykj=self.Y_ykj, X_ykj=self.X_ykj)
+        #return xkor(Y_ykj=self.Y_ykj, X_ykj=self.X_ykj)
+        return self.get_z
 
+    @property
+    def get_z(self) -> float:
+        # Linter-friendly alias; keeps all existing self.Z references working.
+        return self.Z
     #-- weather parameters --------------------
 
     def _weather(self):
