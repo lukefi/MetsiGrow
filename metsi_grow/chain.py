@@ -550,14 +550,29 @@ class Predict(_InitMixin):
 
     @cached_property
     def Z(self) -> float:
-        """Height above sea level (``m``)."""
-        #return xkor(Y_ykj=self.Y_ykj, X_ykj=self.X_ykj)
-        return self.get_z
+
+        x = self.get_x
+        y = self.get_y
+        if (x != 0.0) or (y != 0.0):
+            try:
+                return xkor(Y_ykj=self.Y_ykj, X_ykj=self.X_ykj)
+            except ValueError as e:
+                if "point out of range" not in str(e):
+                    raise
+
+        # Fallback: only call get_z if a subclass actually overrides it,
+        # so we don't recurse back into Z (the base get_z is an alias).
+        if type(self).get_z is not Predict.get_z:
+            return float(self.get_z)
+
+        # Last resort when no DEM and no override:
+        return 0.0
 
     @property
     def get_z(self) -> float:
-        # Linter-friendly alias; keeps all existing self.Z references working.
         return self.Z
+
+
     #-- weather parameters --------------------
 
     def _weather(self):
